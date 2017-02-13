@@ -24,6 +24,7 @@ import edu.uci.ics.textdb.dataflow.common.IJoinPredicate;
 import edu.uci.ics.textdb.dataflow.common.JoinDistancePredicate;
 import edu.uci.ics.textdb.dataflow.common.KeywordPredicate;
 import edu.uci.ics.textdb.dataflow.common.RegexPredicate;
+import edu.uci.ics.textdb.dataflow.connector.OneToNBroadcastConnector;
 import edu.uci.ics.textdb.dataflow.join.Join;
 import edu.uci.ics.textdb.dataflow.keywordmatch.KeywordMatcherSourceOperator;
 import edu.uci.ics.textdb.dataflow.nlpextrator.NlpExtractor;
@@ -125,10 +126,9 @@ public class SampleExtraction {
                 keywordPredicateZika, PROMED_SAMPLE_TABLE);
         
         ProjectionPredicate projectionPredicateIdAndContent = new ProjectionPredicate(
-                Arrays.asList(PromedSchema.ID, PromedSchema.CONTENT));
+                Arrays.asList(SchemaConstants._ID, PromedSchema.ID, PromedSchema.CONTENT));
         
-        ProjectionOperator projectionOperatorIdAndContent1 = new ProjectionOperator(projectionPredicateIdAndContent);
-        ProjectionOperator projectionOperatorIdAndContent2 = new ProjectionOperator(projectionPredicateIdAndContent);
+        ProjectionOperator projectionOperatorIdAndContent = new ProjectionOperator(projectionPredicateIdAndContent);
 
         String regexPerson = "\\b(A|a|(an)|(An)) .{1,40} ((woman)|(man))\\b";
         RegexPredicate regexPredicatePerson = new RegexPredicate(regexPerson, Arrays.asList(PromedSchema.CONTENT),
@@ -141,9 +141,9 @@ public class SampleExtraction {
         IJoinPredicate joinPredicatePersonLocation = new JoinDistancePredicate(PromedSchema.CONTENT, 100);
         Join joinPersonLocation = new Join(joinPredicatePersonLocation);
         
-        ProjectionPredicate projectionPredicateIdAndSpan = new ProjectionPredicate(
-                Arrays.asList(PromedSchema.ID, SchemaConstants.SPAN_LIST));
-        ProjectionOperator projectionOperatorIdAndSpan = new ProjectionOperator(projectionPredicateIdAndSpan);
+        ProjectionPredicate projectionPredicateId = new ProjectionPredicate(
+                Arrays.asList(SchemaConstants._ID, PromedSchema.ID));
+        ProjectionOperator projectionOperatorId = new ProjectionOperator(projectionPredicateId);
          
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy-HH-mm-ss");
         FileSink fileSink = new FileSink( 
@@ -153,18 +153,21 @@ public class SampleExtraction {
         fileSink.setToStringFunction((tuple -> Utils.getTupleString(tuple)));
         
         
-        projectionOperatorIdAndContent1.setInputOperator(keywordSource);
+        projectionOperatorIdAndContent.setInputOperator(keywordSource);
         
-        regexMatcherPerson.setInputOperator(projectionOperatorIdAndContent1);
+        OneToNBroadcastConnector connector1 = new OneToNBroadcastConnector(2);
+        connector1.setInputOperator(projectionOperatorIdAndContent);
         
-        projectionOperatorIdAndContent2.setInputOperator(regexMatcherPerson);
-        nlpExtractorLocation.setInputOperator(projectionOperatorIdAndContent2);
+        regexMatcherPerson.setInputOperator(connector1.getOutputOperator(0));
+        
+        nlpExtractorLocation.setInputOperator(connector1.getOutputOperator(1));
         
         joinPersonLocation.setInnerInputOperator(regexMatcherPerson);
         joinPersonLocation.setOuterInputOperator(nlpExtractorLocation);
+        
+        projectionOperatorId.setInputOperator(joinPersonLocation);
                       
-        projectionOperatorIdAndSpan.setInputOperator(joinPersonLocation);
-        fileSink.setInputOperator(projectionOperatorIdAndSpan);
+        fileSink.setInputOperator(projectionOperatorId);
         
         Plan extractPersonPlan = new Plan(fileSink);
         Engine.getEngine().evaluate(extractPersonPlan);
