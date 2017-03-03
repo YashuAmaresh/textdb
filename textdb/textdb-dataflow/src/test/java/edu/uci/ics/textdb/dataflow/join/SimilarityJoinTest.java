@@ -20,7 +20,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class JoinSimilarityTest {
+/**
+ * Tests the SimilarityJoinPredicate, which joins two tuples
+ *   based on the spans' similarity.
+ * 
+ * @author Zuozhi Wang
+ *
+ */
+public class SimilarityJoinTest {
 
     public static final String NEWS_TABLE_OUTER = JoinTestHelper.NEWS_TABLE_OUTER;
     public static final String NEWS_TABLE_INNER = JoinTestHelper.NEWS_TABLE_INNER;
@@ -62,7 +69,7 @@ public class JoinSimilarityTest {
      * Tests the Similarity Join Predicate on two similar words:
      *   Donald J. Trump
      *   Donald Trump
-     * Under the condition of similarity > 0.8, these two words should match.
+     * Under the condition of similarity (NormalizedLevenshtein) > 0.8, these two words should match.
      *
      */
     @Test
@@ -115,7 +122,7 @@ public class JoinSimilarityTest {
      * Tests the Similarity Join Predicate on two similar words:
      *   Donald J. Trump
      *   Donald Trump
-     * Under the condition of similarity > 0.9, these two words should NOT match.
+     * Under the condition of similarity (NormalizedLevenshtein) > 0.9, these two words should NOT match.
      *
      */
     @Test
@@ -141,7 +148,7 @@ public class JoinSimilarityTest {
      * Tests the Similarity Join Predicate on two similar words:
      *   Galaxy S8
      *   Galaxy Note 7
-     * Under the condition of similarity > 0.5, these two words should match.
+     * Under the condition of similarity (NormalizedLevenshtein) > 0.5, these two words should match.
      *
      */
     @Test
@@ -193,7 +200,7 @@ public class JoinSimilarityTest {
      * Tests the Similarity Join Predicate on two similar words:
      *   Galaxy S8
      *   Galaxy Note 7
-     * Under the condition of similarity > 0.8, these two words should NOT match.
+     * Under the condition of similarity (NormalizedLevenshtein) > 0.8, these two words should NOT match.
      *
      */
     @Test

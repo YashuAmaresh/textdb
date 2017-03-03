@@ -296,9 +296,5 @@ public class KeywordMatcher extends AbstractSingleInputOperator {
     public KeywordPredicate getPredicate() {
         return this.predicate;
     }
-    
-    public void setPredicate(KeywordPredicate predicate) {
-        this.predicate = predicate;
-    }
 
 }

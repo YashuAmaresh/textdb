@@ -35,11 +35,26 @@ import edu.uci.ics.textdb.common.field.Span;
 import edu.uci.ics.textdb.common.utils.Utils;
 
 /**
+ * DataReader is the layer where TextDB handles upper-level operators' read operations
+ *   and performs corresponding operations to Lucene.
+ *   
+ * DataReader can get tuples from the Lucene index folder by a lucene query,
+ *   and return the tuples in an iterative way through "getNextTuple()"
+ * 
+ * DataReader currently has the option to append a "payload" field to a tuple, the "payload" field is a list of spans. 
+ * Each span contains the start, end, and token offset position of a token in the original document.
+ * The "payload" contains spans for EVERY token in tuple.
+ * 
+ * The purpose of the "payload" field is to make subsequent keyword match, fuzzy token match, and dictionary match faster,
+ * because they don't need to tokenize the tuple every time.
+ *   
+ * 
+ * DataReader for a specific table is only accessible from RelationManager.
+ * 
  * 
  * @author Zuozhi Wang
  *
  */
-
 public class DataReader implements IDataReader {
 
     private DataStore dataStore;
@@ -56,11 +71,16 @@ public class DataReader implements IDataReader {
 
     private boolean payloadAdded;
 
-    protected DataReader(DataStore dataStore, Query query) {
+    /*
+     * The package-only level constructor is only accessible inside the storage package.
+     * Only the RelationManager is allowed to constructor a DataWriter object, 
+     *  while upper-level operators can't.
+     */
+    DataReader(DataStore dataStore, Query query) {
         this(dataStore, query, false);
     }
     
-    protected DataReader(DataStore dataStore, Query query, boolean payloadAdded) {
+    DataReader(DataStore dataStore, Query query, boolean payloadAdded) {
         this.dataStore = dataStore;
         this.query = query;
         this.payloadAdded = payloadAdded;

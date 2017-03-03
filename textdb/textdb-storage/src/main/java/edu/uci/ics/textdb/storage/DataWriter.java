@@ -29,6 +29,30 @@ import edu.uci.ics.textdb.common.field.DataTuple;
 import edu.uci.ics.textdb.common.field.IDField;
 import edu.uci.ics.textdb.common.utils.Utils;
 
+/**
+ * DataWriter is the layer where TextDB handles upper-level operators' write/delete/update operations
+ *   and performs corresponding operations to Lucene.
+ *   
+ * Write Operations:
+ *   DataWriter will write tuples to a Lucene index folder.
+ *   DataWriter will assign an random generated "_id" field to every tuple
+ *   that is being inserted to the table.
+ *   
+ * Delete Operations:
+ *   DataWriter can handle deletions according to one or more Lucene queries.
+ *   It also supports clear all tuples in a table.
+ *   
+ *   
+ * Update Operations:
+ *   DataWriter can update the tuple, with the tuple's _id remaining the same.
+ *   
+ *   
+ * DataWriter for a specific table is only accessible from RelationManager.
+ * 
+ * 
+ * @author Zuozhi Wang
+ *
+ */
 public class DataWriter implements IDataWriter {
 
     private String indexDirectory;
@@ -40,7 +64,12 @@ public class DataWriter implements IDataWriter {
     
     private boolean isOpen = false;
 
-    protected DataWriter(IDataStore dataStore, Analyzer analyzer) {
+    /*
+     * The package-only level constructor is only accessible inside the storage package.
+     * Only the RelationManager is allowed to constructor a DataWriter object, 
+     *  while upper-level operators can't.
+     */
+    DataWriter(IDataStore dataStore, Analyzer analyzer) {
         this.indexDirectory = dataStore.getDataDirectory();
         // change the schema to a schema with _ID field
         this.schema = dataStore.getSchema();

@@ -59,6 +59,14 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
 
     String innerJoinAttrName;
     String outerJoinAttrName;
+    
+    private SimilarityFunc similarityFunc;
+    
+    @FunctionalInterface
+    public static interface SimilarityFunc {
+        Double calculateSimilarity(String str1, String str2);
+    }
+
 
     public SimilarityJoinPredicate(String joinAttributeName, Double similarityThreshold) {
         this(joinAttributeName, joinAttributeName, similarityThreshold);
@@ -73,6 +81,10 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
         this.similarityThreshold = similarityThreshold;
         this.outerJoinAttrName = outerJoinAttrName;
         this.innerJoinAttrName = innerJoinAttrName;
+        
+        // initialize default similarity function to NormalizedLevenshtein
+        // which is Levenshtein distance / length of longest string
+        this.similarityFunc = ((str1, str2) -> (1.0 - new NormalizedLevenshtein().distance(str1, str2)));
     }
 
     
@@ -134,13 +146,11 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
         Set<String> outerSpanValueSet = outerRelevantSpanList.stream()
                 .map(span -> span.getValue()).collect(Collectors.toSet());
 
-        // compute the result value set using the distance function
-        NormalizedLevenshtein distanceFunc = new NormalizedLevenshtein();
+        // compute the result value set using the similarity function
         Set<String> resultValueSet = new HashSet<>();
         for (String innerString : innerSpanValueSet) {
             for (String outerString : outerSpanValueSet) {
-                Double distance = distanceFunc.distance(innerString, outerString);
-                if (1 - distance >= similarityThreshold) {
+                if (this.similarityFunc.calculateSimilarity(innerString, outerString) >= this.similarityThreshold ) {
                     resultValueSet.add(innerString);
                     resultValueSet.add(outerString);
                 }
@@ -216,6 +226,10 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
     
     public Double getThreshold() {
         return this.similarityThreshold;
+    }
+    
+    public void setSimilarityFunction(SimilarityFunc similarityFunc) {
+        this.similarityFunc = similarityFunc;
     }
 
 }
