@@ -177,7 +177,6 @@ public class SampleExtraction {
         FileSink fileSink = new FileSink( 
                 new File(sampleDataFilesDirectory + "/person-location-result-"
                         + sdf.format(new Date(System.currentTimeMillis())).toString() + ".txt"));
-
         fileSink.setToStringFunction((tuple -> Utils.getTupleString(tuple)));
 
 
