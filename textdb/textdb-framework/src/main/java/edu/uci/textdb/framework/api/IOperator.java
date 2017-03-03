@@ -28,7 +28,7 @@ import edu.uci.ics.textdb.api.exception.TextDBException;
  *
  */
 public interface IOperator {
-    
+        
     int getInputArity();
     
     void setInputOperator(IOperator... operators) throws TextDBException;
