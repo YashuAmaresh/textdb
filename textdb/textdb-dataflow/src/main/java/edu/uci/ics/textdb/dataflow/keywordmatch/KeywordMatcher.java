@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import edu.uci.ics.textdb.api.common.FieldType;
-import edu.uci.ics.textdb.api.common.ITuple;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.common.Schema;
 import edu.uci.ics.textdb.common.constants.DataConstants;
 import edu.uci.ics.textdb.common.constants.SchemaConstants;
@@ -44,9 +44,9 @@ public class KeywordMatcher extends AbstractSingleInputOperator {
     }
 
     @Override
-    protected ITuple computeNextMatchingTuple() throws TextDBException {
-        ITuple inputTuple = null;
-        ITuple resultTuple = null;
+    protected Tuple computeNextMatchingTuple() throws TextDBException {
+        Tuple inputTuple = null;
+        Tuple resultTuple = null;
 
         while ((inputTuple = inputOperator.getNextTuple()) != null) {
             resultTuple = processOneInputTuple(inputTuple);
@@ -59,8 +59,8 @@ public class KeywordMatcher extends AbstractSingleInputOperator {
     }
 
     @Override
-    public ITuple processOneInputTuple(ITuple inputTuple) throws TextDBException {
-        ITuple resultTuple = null;
+    public Tuple processOneInputTuple(Tuple inputTuple) throws TextDBException {
+        Tuple resultTuple = null;
 
         // There's an implicit assumption that, in open() method, PAYLOAD is
         // checked before SPAN_LIST.
@@ -90,7 +90,7 @@ public class KeywordMatcher extends AbstractSingleInputOperator {
     protected void cleanUp() {
     }
 
-    private ITuple computeConjunctionMatchingResult(ITuple sourceTuple) throws DataFlowException {
+    private Tuple computeConjunctionMatchingResult(Tuple sourceTuple) throws DataFlowException {
         List<Span> payload = (List<Span>) sourceTuple.getField(SchemaConstants.PAYLOAD).getValue();
         List<Span> relevantSpans = filterRelevantSpans(payload);
         List<Span> matchingResults = new ArrayList<>();
@@ -135,7 +135,7 @@ public class KeywordMatcher extends AbstractSingleInputOperator {
         return sourceTuple;
     }
 
-    private ITuple computePhraseMatchingResult(ITuple sourceTuple) throws DataFlowException {
+    private Tuple computePhraseMatchingResult(Tuple sourceTuple) throws DataFlowException {
         List<Span> payload = (List<Span>) sourceTuple.getField(SchemaConstants.PAYLOAD).getValue();
         List<Span> relevantSpans = filterRelevantSpans(payload);
         List<Span> matchingResults = new ArrayList<>();
@@ -233,7 +233,7 @@ public class KeywordMatcher extends AbstractSingleInputOperator {
         return sourceTuple;
     }
 
-    private ITuple computeSubstringMatchingResult(ITuple sourceTuple) throws DataFlowException {
+    private Tuple computeSubstringMatchingResult(Tuple sourceTuple) throws DataFlowException {
         List<Span> matchingResults = new ArrayList<>();
 
         for (String fieldName : this.predicate.getAttributeNames()) {

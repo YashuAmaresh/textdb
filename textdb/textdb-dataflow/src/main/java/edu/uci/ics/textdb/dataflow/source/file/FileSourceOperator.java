@@ -2,14 +2,15 @@ package edu.uci.ics.textdb.dataflow.source.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 import edu.uci.ics.textdb.api.common.Attribute;
-import edu.uci.ics.textdb.api.common.ITuple;
 import edu.uci.ics.textdb.api.common.Schema;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.dataflow.ISourceOperator;
 import edu.uci.ics.textdb.api.exception.TextDBException;
-import edu.uci.ics.textdb.common.field.DataTuple;
+import edu.uci.ics.textdb.common.exception.DataFlowException;
 import edu.uci.ics.textdb.common.utils.Utils;
 
 /**
@@ -40,17 +41,21 @@ public class FileSourceOperator implements ISourceOperator {
     }
 
     @Override
-    public ITuple getNextTuple() throws TextDBException {
+    public Tuple getNextTuple() throws TextDBException {
         if (isFinished) {
             return null;
         }
-        isFinished = true;
-        StringBuilder sb = new StringBuilder();
-        while (scanner.hasNextLine()) {
-            sb.append(scanner.nextLine());
+        try {
+            isFinished = true;
+            StringBuilder sb = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                sb.append(scanner.nextLine());
+            }
+            return new Tuple(new Schema(new Attribute(predicate.getFieldName(), predicate.getFieldType())), 
+                    Utils.getField(predicate.getFieldType(), sb.toString()));
+        } catch (ParseException e) {
+            throw new DataFlowException(e);
         }
-        return new DataTuple(new Attribute(predicate.getFieldName(), predicate.getFieldType()), 
-                Utils.getField(predicate.getFieldType(), sb.toString()));
     }
 
     @Override
@@ -62,7 +67,7 @@ public class FileSourceOperator implements ISourceOperator {
 
     @Override
     public Schema getOutputSchema() {
-        return outputSchema;
+        return null;
     }
 
 }

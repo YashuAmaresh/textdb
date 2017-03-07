@@ -1,6 +1,8 @@
 package edu.uci.ics.textdb.web;
 
-import edu.uci.ics.textdb.api.common.ITuple;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.exception.TextDBException;
 import edu.uci.ics.textdb.api.plan.Plan;
 import edu.uci.ics.textdb.dataflow.sink.TupleStreamSink;
@@ -10,6 +12,7 @@ import edu.uci.ics.textdb.web.healthcheck.SampleHealthCheck;
 import edu.uci.ics.textdb.web.request.beans.KeywordSourceBean;
 import edu.uci.ics.textdb.web.request.beans.NlpExtractorBean;
 import edu.uci.ics.textdb.web.request.beans.TupleStreamSinkBean;
+import edu.uci.ics.textdb.web.resource.PlanStoreResource;
 import edu.uci.ics.textdb.web.resource.QueryPlanResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -49,14 +52,24 @@ public class TextdbWebApplication extends Application<TextdbWebConfiguration> {
         final QueryPlanResource queryPlanResource = new QueryPlanResource();
         // Registers the QueryPlanResource with Jersey
         environment.jersey().register(queryPlanResource);
+
+        // Creates an instance of the PlanStoreResource class to register with Jersey
+        final PlanStoreResource planStoreResource = new PlanStoreResource();
+        // Registers the PlanStoreResource with Jersey
+        environment.jersey().register(planStoreResource);
+
         // Creates an instance of the HealthCheck and registers it with the environment
         final SampleHealthCheck sampleHealthCheck = new SampleHealthCheck();
         // Registering the SampleHealthCheck with the environment
         environment.healthChecks().register("sample", sampleHealthCheck);
-        
+
+        // Configuring the object mapper used by Dropwizard
+        environment.getObjectMapper().configure(MapperFeature.USE_GETTERS_AS_SETTERS, false);
+        environment.getObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         // Enable CORS headers
         final FilterRegistration.Dynamic cors =
-            environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+                environment.servlets().addFilter("CORS", CrossOriginFilter.class);
         // Configure CORS parameters
         cors.setInitParameter("allowedOrigins", "*");
         cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
@@ -82,7 +95,7 @@ public class TextdbWebApplication extends Application<TextdbWebConfiguration> {
         Plan plan = logicalPlan.buildQueryPlan();
         TupleStreamSink sink = (TupleStreamSink) plan.getRoot();
         sink.open();
-        List<ITuple> results = sink.collectAllTuples();
+        List<Tuple> results = sink.collectAllTuples();
         sink.close();
     }
 

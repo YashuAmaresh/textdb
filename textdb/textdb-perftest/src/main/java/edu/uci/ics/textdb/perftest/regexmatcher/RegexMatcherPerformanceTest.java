@@ -8,7 +8,7 @@ import java.util.List;
 
 import edu.uci.ics.textdb.api.exception.TextDBException;
 import org.apache.lucene.analysis.Analyzer;
-import edu.uci.ics.textdb.api.common.ITuple;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.common.constants.LuceneAnalyzerConstants;
 import edu.uci.ics.textdb.common.constants.SchemaConstants;
 import edu.uci.ics.textdb.common.field.ListField;
@@ -102,7 +102,7 @@ public class RegexMatcherPerformanceTest {
 	        long startMatchTime = System.currentTimeMillis();
 	        regexSource.open();
 	        int counter = 0;
-	        ITuple nextTuple = null;
+	        Tuple nextTuple = null;
 	        while ((nextTuple = regexSource.getNextTuple()) != null) {
 	            List<Span> spanList = ((ListField<Span>) nextTuple.getField(SchemaConstants.SPAN_LIST)).getValue();
 	            counter += spanList.size();

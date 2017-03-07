@@ -8,11 +8,10 @@ import java.util.stream.Collectors;
 import edu.uci.ics.textdb.api.common.Attribute;
 import edu.uci.ics.textdb.api.common.FieldType;
 import edu.uci.ics.textdb.api.common.IField;
-import edu.uci.ics.textdb.api.common.ITuple;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.common.Schema;
 import edu.uci.ics.textdb.common.constants.SchemaConstants;
 import edu.uci.ics.textdb.common.exception.DataFlowException;
-import edu.uci.ics.textdb.common.field.DataTuple;
 import edu.uci.ics.textdb.common.field.ListField;
 import edu.uci.ics.textdb.common.field.Span;
 
@@ -151,7 +150,7 @@ public class JoinDistancePredicate implements IJoinPredicate {
      * 
      * @return New Tuple containing the result of join operation.
      */
-	public ITuple joinTuples(ITuple outerTuple, ITuple innerTuple, Schema outputSchema) throws Exception {
+	public Tuple joinTuples(Tuple outerTuple, Tuple innerTuple, Schema outputSchema) throws Exception {
 	    List<Span> newJoinSpanList = new ArrayList<>();
 
 	    /*
@@ -244,7 +243,7 @@ public class JoinDistancePredicate implements IJoinPredicate {
 	    
 	    outputFields.add(new ListField<>(newJoinSpanList));
 	    
-	    return new DataTuple(outputSchema, outputFields.stream().toArray(IField[]::new));
+	    return new Tuple(outputSchema, outputFields.stream().toArray(IField[]::new));
 	}
 
 	/**
@@ -255,7 +254,7 @@ public class JoinDistancePredicate implements IJoinPredicate {
 	 * @param fieldName
 	 * @return True if both the tuples have the field and the values are equal.
 	 */
-	private boolean compareField(ITuple innerTuple, ITuple outerTuple, String fieldName) {  
+	private boolean compareField(Tuple innerTuple, Tuple outerTuple, String fieldName) {  
 	    IField innerField = innerTuple.getField(fieldName);
 	    IField outerField = outerTuple.getField(fieldName);
 	    

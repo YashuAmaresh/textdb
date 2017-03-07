@@ -6,11 +6,10 @@ import java.util.stream.Collectors;
 import edu.uci.ics.textdb.api.common.Attribute;
 import edu.uci.ics.textdb.api.common.FieldType;
 import edu.uci.ics.textdb.api.common.IField;
-import edu.uci.ics.textdb.api.common.ITuple;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.common.Schema;
 import edu.uci.ics.textdb.common.constants.SchemaConstants;
 import edu.uci.ics.textdb.common.exception.DataFlowException;
-import edu.uci.ics.textdb.common.field.DataTuple;
 import edu.uci.ics.textdb.common.field.IDField;
 import edu.uci.ics.textdb.common.field.ListField;
 import edu.uci.ics.textdb.common.field.Span;
@@ -129,7 +128,7 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
     }
 
     @Override
-    public ITuple joinTuples(ITuple outerTuple, ITuple innerTuple, Schema outputSchema) throws DataFlowException {        
+    public Tuple joinTuples(Tuple outerTuple, Tuple innerTuple, Schema outputSchema) throws DataFlowException {        
         if (similarityThreshold == 0) {
             return null;
         }
@@ -179,7 +178,7 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
     }
     
     
-    private ITuple mergeTuples(ITuple outerTuple, ITuple innerTuple, Schema outputSchema, List<Span> mergeSpanList) {
+    private Tuple mergeTuples(Tuple outerTuple, Tuple innerTuple, Schema outputSchema, List<Span> mergeSpanList) {
         List<IField> resultFields = new ArrayList<>();
         for (String attrName : outputSchema.getAttributeNames()) {
             // generate a new _ID field for this tuple
@@ -206,7 +205,7 @@ public class SimilarityJoinPredicate implements IJoinPredicate {
                 }
             }
         }
-        return new DataTuple(outputSchema, resultFields.stream().toArray(IField[]::new));
+        return new Tuple(outputSchema, resultFields.stream().toArray(IField[]::new));
     }
     
     private Span addFieldPrefix(Span span, String prefix) {

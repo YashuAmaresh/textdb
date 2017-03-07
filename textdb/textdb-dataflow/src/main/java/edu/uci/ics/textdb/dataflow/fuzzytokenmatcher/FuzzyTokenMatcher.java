@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.uci.ics.textdb.api.common.FieldType;
-import edu.uci.ics.textdb.api.common.ITuple;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.common.Schema;
 import edu.uci.ics.textdb.common.constants.SchemaConstants;
 import edu.uci.ics.textdb.common.exception.DataFlowException;
@@ -50,9 +50,9 @@ public class FuzzyTokenMatcher extends AbstractSingleInputOperator {
     }
 
     @Override
-    protected ITuple computeNextMatchingTuple() throws TextDBException {
-        ITuple inputTuple = null;
-        ITuple resultTuple = null;
+    protected Tuple computeNextMatchingTuple() throws TextDBException {
+        Tuple inputTuple = null;
+        Tuple resultTuple = null;
         
         while ((inputTuple = inputOperator.getNextTuple()) != null) {          
             // There's an implicit assumption that, in open() method, PAYLOAD is
@@ -76,7 +76,7 @@ public class FuzzyTokenMatcher extends AbstractSingleInputOperator {
     }
 
     @Override
-    public ITuple processOneInputTuple(ITuple inputTuple) throws TextDBException {
+    public Tuple processOneInputTuple(Tuple inputTuple) throws TextDBException {
         List<Span> payload = (List<Span>) inputTuple.getField(SchemaConstants.PAYLOAD).getValue();
         List<Span> relevantSpans = filterRelevantSpans(payload);
         List<Span> matchResults = new ArrayList<>();

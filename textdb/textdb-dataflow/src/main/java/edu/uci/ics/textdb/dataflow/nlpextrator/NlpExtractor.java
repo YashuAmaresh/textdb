@@ -10,7 +10,7 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
 import edu.uci.ics.textdb.api.common.IField;
-import edu.uci.ics.textdb.api.common.ITuple;
+import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.common.Schema;
 import edu.uci.ics.textdb.common.constants.SchemaConstants;
 import edu.uci.ics.textdb.api.exception.TextDBException;
@@ -64,9 +64,9 @@ public class NlpExtractor extends AbstractSingleInputOperator {
     }
     
     @Override
-    protected ITuple computeNextMatchingTuple() throws TextDBException {
-        ITuple inputTuple = null;
-        ITuple resultTuple = null;
+    protected Tuple computeNextMatchingTuple() throws TextDBException {
+        Tuple inputTuple = null;
+        Tuple resultTuple = null;
         
         while ((inputTuple = inputOperator.getNextTuple()) != null) {
             if (!inputSchema.containsField(SchemaConstants.SPAN_LIST)) {
@@ -82,7 +82,7 @@ public class NlpExtractor extends AbstractSingleInputOperator {
     }
 
     @Override
-    public ITuple processOneInputTuple(ITuple inputTuple) throws TextDBException {
+    public Tuple processOneInputTuple(Tuple inputTuple) throws TextDBException {
         List<Span> matchingResults = new ArrayList<>();
         for (String attributeName : predicate.getAttributeNames()) {
             IField field = inputTuple.getField(attributeName);
