@@ -1,13 +1,16 @@
-package edu.uci.ics.textdb.dataflow.source;
+package edu.uci.ics.textdb.dataflow.source.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import edu.uci.ics.textdb.api.common.Attribute;
 import edu.uci.ics.textdb.api.common.ITuple;
 import edu.uci.ics.textdb.api.common.Schema;
 import edu.uci.ics.textdb.api.dataflow.ISourceOperator;
 import edu.uci.ics.textdb.api.exception.TextDBException;
+import edu.uci.ics.textdb.common.field.DataTuple;
+import edu.uci.ics.textdb.common.utils.Utils;
 
 /**
  * FileSourceOperator treats files on disk as a source. FileSourceOperator reads
@@ -17,43 +20,37 @@ import edu.uci.ics.textdb.api.exception.TextDBException;
  * @author zuozhi
  */
 public class FileSourceOperator implements ISourceOperator {
-
-    @FunctionalInterface
-    public static interface ToTuple {
-        ITuple convertToTuple(String str) throws Exception;
-    }
-
-    private File file;
+    
+    private FileSourcePredicate predicate;
     private Scanner scanner;
-    private ToTuple toTupleFunc;
-    private Schema outputSchema;
-
-    public FileSourceOperator(String filePath, ToTuple toTupleFunc, Schema schema) {
-        this.file = new File(filePath);
-        this.toTupleFunc = toTupleFunc;
-        this.outputSchema = schema;
+    private boolean isFinished;
+    
+    public FileSourceOperator(FileSourcePredicate predicate) {
+        this.predicate = predicate;
     }
 
     @Override
     public void open() throws TextDBException {
         try {
-            this.scanner = new Scanner(file);
+            scanner = new Scanner(new File(predicate.getFilePath()));
+            isFinished = false;
         } catch (FileNotFoundException e) {
-            throw new TextDBException("Failed to open FileSourceOperator", e);
+            throw new TextDBException("Failed to open FileSourceOperator\n" + e.getMessage(), e);
         }
     }
 
     @Override
     public ITuple getNextTuple() throws TextDBException {
-        if (scanner.hasNextLine()) {
-            try {
-                return this.toTupleFunc.convertToTuple(scanner.nextLine());
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-                return getNextTuple();
-            }
+        if (isFinished) {
+            return null;
         }
-        return null;
+        isFinished = true;
+        StringBuilder sb = new StringBuilder();
+        while (scanner.hasNextLine()) {
+            sb.append(scanner.nextLine());
+        }
+        return new DataTuple(new Attribute(predicate.getFieldName(), predicate.getFieldType()), 
+                Utils.getField(predicate.getFieldType(), sb.toString()));
     }
 
     @Override

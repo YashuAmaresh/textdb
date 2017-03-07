@@ -17,7 +17,7 @@ import edu.uci.ics.textdb.api.plan.Plan;
 import edu.uci.ics.textdb.common.field.DataTuple;
 import edu.uci.ics.textdb.common.utils.Utils;
 import edu.uci.ics.textdb.dataflow.sink.IndexSink;
-import edu.uci.ics.textdb.dataflow.source.FileSourceOperator;
+import edu.uci.ics.textdb.dataflow.source.file.FileSourceOperator;
 import edu.uci.ics.textdb.storage.RelationManager;
 
 /*
@@ -85,7 +85,7 @@ public class MedlineIndexWriter {
      */
     public static Plan getMedlineIndexPlan(String filePath, String tableName) throws TextDBException {
         IndexSink medlineIndexSink = new IndexSink(tableName, false);
-        ISourceOperator fileSourceOperator = new FileSourceOperator(filePath, (s -> recordToTuple(s)),
+        FileSourceOperator fileSourceOperator = new FileSourceOperator(filePath, (s -> recordToTuple(s)),
                 RelationManager.getRelationManager().getTableSchema(tableName));
         medlineIndexSink.setInputOperator(fileSourceOperator);
 
