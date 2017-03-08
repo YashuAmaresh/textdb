@@ -11,6 +11,7 @@ import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.dataflow.ISourceOperator;
 import edu.uci.ics.textdb.api.exception.TextDBException;
 import edu.uci.ics.textdb.common.exception.DataFlowException;
+import edu.uci.ics.textdb.common.exception.ErrorMessages;
 import edu.uci.ics.textdb.common.utils.Utils;
 
 /**
@@ -23,8 +24,10 @@ import edu.uci.ics.textdb.common.utils.Utils;
 public class FileSourceOperator implements ISourceOperator {
     
     private FileSourcePredicate predicate;
-    private Scanner scanner;
-    private boolean isFinished;
+    private Schema outputSchema;
+    
+    private int fileListCursor = 0;
+    private boolean isOpen = false;
     
     public FileSourceOperator(FileSourcePredicate predicate) {
         this.predicate = predicate;
@@ -32,42 +35,44 @@ public class FileSourceOperator implements ISourceOperator {
 
     @Override
     public void open() throws TextDBException {
-        try {
-            scanner = new Scanner(new File(predicate.getFilePath()));
-            isFinished = false;
-        } catch (FileNotFoundException e) {
-            throw new TextDBException("Failed to open FileSourceOperator\n" + e.getMessage(), e);
+        if(isOpen) {
+            return;
         }
+        isOpen = true;
+        outputSchema = new Schema(new Attribute(predicate.getFieldName(), predicate.getFieldType()));
     }
 
     @Override
     public Tuple getNextTuple() throws TextDBException {
-        if (isFinished) {
+        if (! isOpen) {
+            throw new DataFlowException(ErrorMessages.OPERATOR_NOT_OPENED);
+        }
+        if (fileListCursor >= predicate.getFilePathList().size()) {
             return null;
         }
         try {
-            isFinished = true;
+            String filePath = predicate.getFilePathList().get(fileListCursor);
+            Scanner scanner = new Scanner(new File(filePath));
             StringBuilder sb = new StringBuilder();
             while (scanner.hasNextLine()) {
                 sb.append(scanner.nextLine());
             }
-            return new Tuple(new Schema(new Attribute(predicate.getFieldName(), predicate.getFieldType())), 
+            scanner.close();
+            return new Tuple(outputSchema, 
                     Utils.getField(predicate.getFieldType(), sb.toString()));
-        } catch (ParseException e) {
+        } catch (ParseException | FileNotFoundException e) {
             throw new DataFlowException(e);
         }
     }
 
     @Override
     public void close() throws TextDBException {
-        if (this.scanner != null) {
-            this.scanner.close();
-        }
+        isOpen = false;
     }
 
     @Override
     public Schema getOutputSchema() {
-        return null;
+        return outputSchema;
     }
 
 }

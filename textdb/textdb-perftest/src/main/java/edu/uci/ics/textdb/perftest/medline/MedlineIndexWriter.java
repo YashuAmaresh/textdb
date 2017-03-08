@@ -2,6 +2,7 @@ package edu.uci.ics.textdb.perftest.medline;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,13 +12,12 @@ import edu.uci.ics.textdb.api.common.FieldType;
 import edu.uci.ics.textdb.api.common.IField;
 import edu.uci.ics.textdb.api.common.Tuple;
 import edu.uci.ics.textdb.api.common.Schema;
-import edu.uci.ics.textdb.api.dataflow.ISourceOperator;
 import edu.uci.ics.textdb.api.exception.TextDBException;
 import edu.uci.ics.textdb.api.plan.Plan;
 import edu.uci.ics.textdb.common.utils.Utils;
 import edu.uci.ics.textdb.dataflow.sink.IndexSink;
 import edu.uci.ics.textdb.dataflow.source.file.FileSourceOperator;
-import edu.uci.ics.textdb.storage.RelationManager;
+import edu.uci.ics.textdb.dataflow.source.file.FileSourcePredicate;
 
 /*
  * This class defines Medline data schema.
@@ -84,8 +84,8 @@ public class MedlineIndexWriter {
      */
     public static Plan getMedlineIndexPlan(String filePath, String tableName) throws TextDBException {
         IndexSink medlineIndexSink = new IndexSink(tableName, false);
-        FileSourceOperator fileSourceOperator = new FileSourceOperator(filePath, (s -> recordToTuple(s)),
-                RelationManager.getRelationManager().getTableSchema(tableName));
+        FileSourceOperator fileSourceOperator = new FileSourceOperator(
+                new FileSourcePredicate(Arrays.asList(filePath), "content", FieldType.TEXT));
         medlineIndexSink.setInputOperator(fileSourceOperator);
 
         Plan writeIndexPlan = new Plan(medlineIndexSink);
