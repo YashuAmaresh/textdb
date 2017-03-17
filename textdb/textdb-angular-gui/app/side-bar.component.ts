@@ -28,6 +28,7 @@ export class SideBarComponent {
                 for(var attribute in data.operatorData.properties.attributes){
                     this.attributes.push(attribute);
                 }
+                console.log("Edit Bar Created, Edit Bar id = " + this.operatorId);
             });
     }
 
@@ -45,5 +46,8 @@ export class SideBarComponent {
         this.currentDataService.setData(this.data);
     }
 
+    onDelete(){
+      jQuery('#the-flowchart').flowchart('deleteSelected');
+    }
 
 }

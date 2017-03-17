@@ -53,6 +53,24 @@ export class OperatorBarComponent {
                 animate: false,
                 focal: e
             });
+            var ZoomRatio = possibleZooms[currentZoom];
+            // enlarge the div ratio so there's more space for the operators
+            if (ZoomRatio < 0.8){
+              jQuery('#the-flowchart').css({
+                "left" : "-140px",
+                "top" : "-90px",
+                "width" : "120%",
+                "height" : "120%",
+              });
+            } else {
+              jQuery('#the-flowchart').css({
+                "left" : "0px",
+                "width" : "100%",
+                "top" : "0px",
+                "height" : "100%",
+              });
+            }
+
         });
         // // panzoom end
 
@@ -100,6 +118,8 @@ export class OperatorBarComponent {
 
                             var operatorNum = jQuery('#the-flowchart').flowchart('addOperator', data);
                             current.currentDataService.addData(data, operatorNum, jQuery('#the-flowchart').flowchart('getData'));
+                            jQuery('#the-flowchart').flowchart('selectOperator', operatorNum); // select the created operator
+                            console.log("Created Operator id = " + operatorNum);
                         }
                     }
                 });

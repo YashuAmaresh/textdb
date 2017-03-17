@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+
+import { SideBarComponent }   from './side-bar.component';
+
+
 declare var jQuery: any;
 
 @Component({
@@ -12,12 +16,21 @@ declare var jQuery: any;
 	styleUrls: ['style.css']
 })
 export class TheFlowchartComponent {
-
+	theSideBar : SideBarComponent;
 	initialize(data: any) {
+		var current = this;
 		jQuery('#the-flowchart').flowchart({
 			data: data,
-            multipleLinksOnOutput: true
+    	multipleLinksOnOutput: true,
+			onOperatorSelect : function (operatorId){
+				var data = jQuery('#the-flowchart').flowchart('getData');
+				console.log("Selected Operator = " + operatorId);
+				console.log("HELLO Selected");
+				return true;
+			}
 		});
 	}
+
+
 
 }
