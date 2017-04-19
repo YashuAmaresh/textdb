@@ -25,7 +25,7 @@ export class SideBarComponent {
 
     tempSubmitted = false;
 
-    hiddenList : string[] = ["operatorType","offset"];
+    hiddenList : string[] = ["operatorType"];
     selectorList : string[] = ["matchingType","nlpEntityType","splitType","sampleType"].concat(this.hiddenList);
     matcherList : string[] = ["conjunction","phrase","substring"];
     nlpEntityList : string[] = ["noun","verb","adjective","adverb","ne_all","number","location","person","organization","money","percent","date","time"];
@@ -67,17 +67,17 @@ export class SideBarComponent {
                 console.log(data);
                 this.submitted = false;
                 
-                if (data.status === 200) {
+                if (data.code === 0) {
                   // this.tempSubmitted = true;
                   var node = new PrettyJSON.view.Node({
                     el: jQuery("#elem"),
-                    data: data.message
+                    data: JSON.parse(data.message)
                   });
                 } else {
                   // this.tempSubmitted = true;
                   var node = new PrettyJSON.view.Node({
                     el: jQuery("#elem"),
-                    data: data.message
+                    data: JSON.parse(data.message)
                   });
                 }
 

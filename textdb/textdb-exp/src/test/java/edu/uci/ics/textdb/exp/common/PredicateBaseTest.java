@@ -51,6 +51,8 @@ public class PredicateBaseTest {
         
         JsonNode predicateJsonNode = objectMapper.readValue(predicateJson, JsonNode.class);
         JsonNode resultPredicateJsonNode = objectMapper.readValue(resultPredicateJson, JsonNode.class);
+        
+        System.out.println(resultPredicateJson);
 
         Assert.assertEquals(predicateJsonNode, resultPredicateJsonNode);
         Assert.assertTrue(predicateJson.contains(PropertyNameConstants.OPERATOR_TYPE));

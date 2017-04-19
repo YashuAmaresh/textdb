@@ -34,7 +34,7 @@ import edu.uci.ics.textdb.storage.RelationManager;
  */
 public class KeywordMatcherSourceOperator extends AbstractSingleInputOperator implements ISourceOperator {
 
-    private final KeywordPredicate predicate;
+    private final KeywordSourcePredicate predicate;
 
     private final DataReader dataReader;
     private final KeywordMatcher keywordMatcher;
@@ -68,10 +68,7 @@ public class KeywordMatcherSourceOperator extends AbstractSingleInputOperator im
             this.dataReader.setPayloadAdded(true);
             
             // generate KeywordMatcher
-            KeywordPredicate keywordPredicate = new KeywordPredicate(
-                    predicate.getQuery(), predicate.getAttributeNames(), predicate.getLuceneAnalyzerString(), predicate.getMatchingType(),
-                    null, null);
-            keywordMatcher = new KeywordMatcher(keywordPredicate);
+            keywordMatcher = new KeywordMatcher(predicate);
             keywordMatcher.setInputOperator(dataReader);
             
             this.inputOperator = this.keywordMatcher;

@@ -62,7 +62,8 @@ let keywordMatcher = {
             "query": "keyword",
             "attributes": ["attr1", "attr2"],
             "luceneAnalyzer": "standard",
-            "matchingType": "conjunction"
+            "matchingType": "conjunction",
+            "addSpans": true
         }
     }
 };
@@ -108,9 +109,7 @@ let dictionaryMatcher = {
     },
     attributes :  {
         "operatorType": "DictionaryMatcher",
-        "dictionary": {
-            "dictionaryEntries": ["entry1", "entry2"]
-        },
+        "dictionaryEntries": ["entry1", "entry2"],
         "attributes": ["attr1", "attr2"],
         "luceneAnalyzer": "standard",
         "matchingType": "conjunction"
@@ -302,8 +301,7 @@ let keywordSource = {
         "luceneAnalyzer": "standard",
         "matchingType": "conjunction",
         "tableName": "tableName",
-        "limit": 2147483647,
-        "offset": null
+        "addSpans": false
     }
   }
 }
@@ -326,9 +324,7 @@ let DictionarySource = {
     },
     attributes : {
         "operatorType": "DictionarySource",
-        "dictionary": {
-            "dictionaryEntries": ["entry1", "entry2"]
-        },
+        "dictionaryEntries": ["entry1", "entry2"],
         "attributes": ["attr1", "attr2"],
         "luceneAnalyzer": "standard",
         "matchingType": "conjunction",
@@ -461,7 +457,9 @@ let result = {
       }
     },
     attributes : {
-        "operatorType": "ViewResults"
+        "operatorType": "ViewResults",
+        "limit": 2147483647,
+        "offset": 0
     }
   }
 }

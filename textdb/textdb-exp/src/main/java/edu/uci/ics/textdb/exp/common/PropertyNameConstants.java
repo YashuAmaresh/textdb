@@ -29,6 +29,7 @@ public class PropertyNameConstants {
     public static final String FILE_PATH = "filePath";
     public static final String LIMIT = "limit";
     public static final String OFFSET = "offset";
+    public static final String ADD_SPANS = "addSpans";
     
     // related to keyword matcher
     public static final String KEYWORD_QUERY = "query";

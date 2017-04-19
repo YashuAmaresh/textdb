@@ -68,7 +68,7 @@ export class CurrentDataService {
         var operators = [];
         var links = [];
         
-        var listAttributes : string[] = ["attributes"]
+        var listAttributes : string[] = ["attributes", "dictionaryEntries"]
 
         for (var operatorIndex in this.currentData.jsonData.operators) {
             var currentOperator = this.currentData.jsonData['operators'];
@@ -78,8 +78,13 @@ export class CurrentDataService {
                 for (var attribute in currentOperator[operatorIndex]['properties']['attributes']) {
                     if (currentOperator[operatorIndex]['properties']['attributes'].hasOwnProperty(attribute)) {
                         attributes[attribute] = currentOperator[operatorIndex]['properties']['attributes'][attribute];
+                        // if attribute is an array property, and it's not an array
                         if (jQuery.inArray(attribute, listAttributes) != -1 && ! Array.isArray(attributes[attribute])) {
                           attributes[attribute] = attributes[attribute].split(",").map((item) => item.trim());
+                        }
+                        // if the value is a string and can be converted to a boolean value
+                        if (attributes[attribute] instanceof String && Boolean(attributes[attribute])) {
+                          attributes[attribute] = (attributes[attribute].toLowerCase() === 'true')
                         }
                     }
                 }

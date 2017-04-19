@@ -16,7 +16,7 @@ import edu.uci.ics.textdb.storage.constants.LuceneAnalyzerConstants;
 public class TwitterSample {
     
     public static String twitterFilePath = "/Users/georgewang/Desktop/twitter_data/data/climate_change_tweets.json";
-    public static String twitterTable = "twitter";
+    public static String twitterClimateTable = "twitter_climate";
     
     public static void main(String[] args) throws Exception {
         writeTwitterIndex();
@@ -24,11 +24,11 @@ public class TwitterSample {
     
     public static void writeTwitterIndex() throws Exception {
         RelationManager relationManager = RelationManager.getRelationManager();
-        relationManager.deleteTable(twitterTable);
-        relationManager.createTable(twitterTable, "../index/twitter/", TwitterSchema.TWITTER_SCHEMA, 
+        relationManager.deleteTable(twitterClimateTable);
+        relationManager.createTable(twitterClimateTable, "../index/twitter_climate/", TwitterSchema.TWITTER_SCHEMA, 
                 LuceneAnalyzerConstants.standardAnalyzerString());
         
-        DataWriter dataWriter = relationManager.getTableDataWriter(twitterTable);
+        DataWriter dataWriter = relationManager.getTableDataWriter(twitterClimateTable);
         dataWriter.open();
         
         int counter = 0;
