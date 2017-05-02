@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.uci.ics.textdb.api.constants.SchemaConstants;
 import edu.uci.ics.textdb.api.constants.TestConstants;
 import edu.uci.ics.textdb.api.constants.TestConstantsChinese;
 import edu.uci.ics.textdb.api.field.DateField;
@@ -21,6 +20,7 @@ import edu.uci.ics.textdb.api.field.ListField;
 import edu.uci.ics.textdb.api.field.StringField;
 import edu.uci.ics.textdb.api.field.TextField;
 import edu.uci.ics.textdb.api.schema.Attribute;
+import edu.uci.ics.textdb.api.schema.AttributeType;
 import edu.uci.ics.textdb.api.schema.Schema;
 import edu.uci.ics.textdb.api.span.Span;
 import edu.uci.ics.textdb.api.tuple.Tuple;
@@ -39,6 +39,9 @@ public class DictionaryMatcherTest {
     
     public static final String PEOPLE_TABLE = DictionaryMatcherTestHelper.PEOPLE_TABLE;
     public static final String CHINESE_TABLE = DictionaryMatcherTestHelper.CHINESE_TABLE;
+    
+    public static final String RESULTS = DictionaryMatcherTestHelper.RESULTS;
+    public static final Attribute RESULTS_ATTRIBUTE = new Attribute(RESULTS, AttributeType.LIST);
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -105,7 +108,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("bruce"), new StringField("john Lee"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -138,7 +141,7 @@ public class DictionaryMatcherTest {
         Span span = new Span("firstName", 0, 2, "孔明", "孔明");
         list.add(span);
 
-        Schema resultSchema = Utils.addAttributeToSchema(TestConstantsChinese.SCHEMA_PEOPLE, SchemaConstants.SPAN_LIST_ATTRIBUTE);
+        Schema resultSchema = Utils.addAttributeToSchema(TestConstantsChinese.SCHEMA_PEOPLE, RESULTS_ATTRIBUTE);
 
         IField[] fields1 = { new StringField("孔明"), new StringField("洛克贝尔"), new IntegerField(42),
                 new DoubleField(5.99), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1974")),
@@ -176,7 +179,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("bruce"), new StringField("john Lee"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -220,7 +223,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("无忌"), new StringField("长孙"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -263,7 +266,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("bruce"), new StringField("john Lee"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -306,7 +309,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("无忌"), new StringField("长孙"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -346,7 +349,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("bruce"), new StringField("john Lee"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -392,7 +395,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("无忌"), new StringField("长孙"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -434,7 +437,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("bruce"), new StringField("john Lee"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -475,7 +478,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("无忌"), new StringField("长孙"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -516,7 +519,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("bruce"), new StringField("john Lee"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -557,7 +560,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("无忌"), new StringField("长孙"), new IntegerField(46),
                 new DoubleField(5.50), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-14-1970")),
@@ -599,7 +602,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -634,7 +637,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("孔明"), new StringField("洛克贝尔"),
                 new IntegerField(42), new DoubleField(5.99),
@@ -670,7 +673,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -705,7 +708,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("孔明"), new StringField("洛克贝尔"),
                 new IntegerField(42), new DoubleField(5.99),
@@ -742,7 +745,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -777,7 +780,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstantsChinese.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("孔明"), new StringField("洛克贝尔"),
                 new IntegerField(42), new DoubleField(5.99),
@@ -818,7 +821,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -865,7 +868,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -904,7 +907,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -939,7 +942,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         IField[] fields1 = { new StringField("george lin lin"), new StringField("lin clooney"), new IntegerField(43),
                 new DoubleField(6.06), new DateField(new SimpleDateFormat("MM-dd-yyyy").parse("01-13-1973")),
@@ -963,7 +966,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         Span span1 = new Span("description", 5, 10, "angry", "Angry", 1);
         Span span2 = new Span("description", 6, 11, "angry", "Angry", 1);
@@ -1022,7 +1025,7 @@ public class DictionaryMatcherTest {
         for (int count = 0; count < schemaAttributes.length - 1; count++) {
             schemaAttributes[count] = TestConstants.ATTRIBUTES_PEOPLE[count];
         }
-        schemaAttributes[schemaAttributes.length - 1] = SchemaConstants.SPAN_LIST_ATTRIBUTE;
+        schemaAttributes[schemaAttributes.length - 1] = RESULTS_ATTRIBUTE;
 
         Span span1 = new Span("description", 5, 10, "angry", "Angry");
         Span span2 = new Span("description", 6, 11, "angry", "Angry");
@@ -1066,8 +1069,6 @@ public class DictionaryMatcherTest {
         expectedList.add(tuple2);
         expectedList.add(tuple3);
         expectedList.add(tuple4);
-
-        resultList = Utils.removeFields(resultList, SchemaConstants.PAYLOAD);
 
         Assert.assertEquals(expectedList.size(), 4);
         Assert.assertEquals(resultList.size(), 1);

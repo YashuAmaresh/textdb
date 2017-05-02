@@ -3,6 +3,7 @@ package edu.uci.ics.textdb.exp.keywordmatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.ics.textdb.api.constants.SchemaConstants;
 import edu.uci.ics.textdb.api.constants.TestConstants;
 import edu.uci.ics.textdb.api.constants.TestConstantsChinese;
 import edu.uci.ics.textdb.api.exception.DataFlowException;
@@ -11,6 +12,7 @@ import edu.uci.ics.textdb.api.tuple.Tuple;
 import edu.uci.ics.textdb.api.utils.TestUtils;
 import edu.uci.ics.textdb.exp.source.scan.ScanBasedSourceOperator;
 import edu.uci.ics.textdb.exp.source.scan.ScanSourcePredicate;
+import edu.uci.ics.textdb.exp.utils.DataflowUtils;
 import edu.uci.ics.textdb.storage.DataWriter;
 import edu.uci.ics.textdb.storage.RelationManager;
 import edu.uci.ics.textdb.storage.constants.LuceneAnalyzerConstants;
@@ -122,7 +124,7 @@ public class KeywordTestHelper {
         
         KeywordPredicate keywordPredicate = new KeywordPredicate(
                 keywordQuery, attributeNames, relationManager.getTableAnalyzerString(tableName), matchingType, 
-                limit, offset);
+                SchemaConstants.SPAN_LIST, limit, offset);
         KeywordMatcher keywordMatcher = new KeywordMatcher(keywordPredicate);
         
         keywordMatcher.setInputOperator(scanSource);
@@ -144,7 +146,7 @@ public class KeywordTestHelper {
         RelationManager relationManager = RelationManager.getRelationManager();
         KeywordSourcePredicate keywordSourcePredicate = new KeywordSourcePredicate(
                 keywordQuery, attributeNames, relationManager.getTableAnalyzerString(tableName), matchingType, 
-                tableName, limit, offset);
+                tableName, SchemaConstants.SPAN_LIST, limit, offset);
         KeywordMatcherSourceOperator keywordSource = new KeywordMatcherSourceOperator(
                 keywordSourcePredicate);
         

@@ -56,7 +56,7 @@ public class DictionaryMatcher implements IOperator {
 
             keywordPredicate = new KeywordPredicate(currentDictionaryEntry,
                     predicate.getAttributeNames(),
-                    predicate.getAnalyzerString(), predicate.getKeywordMatchingType());
+                    predicate.getAnalyzerString(), predicate.getKeywordMatchingType(), predicate.getSpanListName());
 
             keywordMatcher = new KeywordMatcher(keywordPredicate);
             
@@ -106,7 +106,8 @@ public class DictionaryMatcher implements IOperator {
             
             keywordPredicate = new KeywordPredicate(currentDictionaryEntry,
                     predicate.getAttributeNames(),
-                    predicate.getAnalyzerString(), predicate.getKeywordMatchingType());
+                    predicate.getAnalyzerString(), predicate.getKeywordMatchingType(),
+                    predicate.getSpanListName());
             keywordMatcher = new KeywordMatcher(keywordPredicate);
             keywordMatcher.setInputOperator(cacheOperator);
 

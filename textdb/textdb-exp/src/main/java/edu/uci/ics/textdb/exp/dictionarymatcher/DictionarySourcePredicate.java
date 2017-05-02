@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import edu.uci.ics.textdb.api.dataflow.IOperator;
 import edu.uci.ics.textdb.exp.common.PropertyNameConstants;
 import edu.uci.ics.textdb.exp.keywordmatcher.KeywordMatchingType;
 
@@ -23,7 +25,7 @@ public class DictionarySourcePredicate extends DictionaryPredicate {
      */
     @JsonCreator
     public DictionarySourcePredicate(
-            @JsonProperty(value = PropertyNameConstants.DICTIONARY, required = true)
+            @JsonUnwrapped
             Dictionary dictionary, 
             @JsonProperty(value = PropertyNameConstants.ATTRIBUTE_NAMES, required = true)
             List<String> attributeNames, 
@@ -32,14 +34,21 @@ public class DictionarySourcePredicate extends DictionaryPredicate {
             @JsonProperty(value = PropertyNameConstants.KEYWORD_MATCHING_TYPE, required = true)
             KeywordMatchingType keywordMatchingType,
             @JsonProperty(value = PropertyNameConstants.TABLE_NAME, required = true)
-            String tableName) {
-        super(dictionary, attributeNames, luceneAnalyzerStr, keywordMatchingType);
+            String tableName,
+            @JsonProperty(value = PropertyNameConstants.SPAN_LIST_NAME, required = false)
+            String spanListName) {
+        super(dictionary, attributeNames, luceneAnalyzerStr, keywordMatchingType, spanListName);
         this.tableName = tableName;
     }
     
     @JsonProperty(value = PropertyNameConstants.TABLE_NAME)
     public String getTableName() {
         return this.tableName;
+    }
+    
+    @Override
+    public IOperator newOperator() {
+        return new DictionaryMatcherSourceOperator(this);
     }
     
 }

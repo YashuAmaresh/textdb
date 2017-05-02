@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.uci.ics.textdb.api.dataflow.IOperator;
 import edu.uci.ics.textdb.exp.common.PropertyNameConstants;
 
 /**
@@ -24,9 +25,10 @@ public class KeywordSourcePredicate extends KeywordPredicate {
             List<String> attributeNames,
             String luceneAnalyzerString, 
             KeywordMatchingType matchingType,
-            String tableName) {
+            String tableName,
+            String spanListName) {
         
-        super(query, attributeNames, luceneAnalyzerString, matchingType, null, null);
+        super(query, attributeNames, luceneAnalyzerString, matchingType, spanListName, null, null);
         this.tableName = tableName;
     }
     
@@ -43,18 +45,25 @@ public class KeywordSourcePredicate extends KeywordPredicate {
             KeywordMatchingType matchingType,
             @JsonProperty(value = PropertyNameConstants.TABLE_NAME, required = true)
             String tableName,
+            @JsonProperty(value = PropertyNameConstants.SPAN_LIST_NAME, required = false)
+            String spanListName,
             @JsonProperty(value = PropertyNameConstants.LIMIT, required = false)
             Integer limit,
             @JsonProperty(value = PropertyNameConstants.OFFSET, required = false)
             Integer offset) {
         
-        super(query, attributeNames, luceneAnalyzerString, matchingType, limit, offset);
+        super(query, attributeNames, luceneAnalyzerString, matchingType, spanListName, limit, offset);
         this.tableName = tableName;
     }
     
     @JsonProperty(PropertyNameConstants.TABLE_NAME)
     public String getTableName() {
         return tableName;
+    }
+    
+    @Override
+    public IOperator newOperator() {
+        return new KeywordMatcherSourceOperator(this);
     }
 
 }

@@ -3,7 +3,7 @@ package edu.uci.ics.textdb.api.exception;
 /**
  * Superclass of all exceptions inside TextDB Engine.
  */
-public class TextDBException extends Exception {
+public class TextDBException extends RuntimeException {
 
     private static final long serialVersionUID = 4359106470500687632L;
 

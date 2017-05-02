@@ -9,6 +9,7 @@ import edu.uci.ics.textdb.api.exception.DataFlowException;
 import edu.uci.ics.textdb.api.exception.TextDBException;
 import edu.uci.ics.textdb.api.tuple.Tuple;
 import edu.uci.ics.textdb.api.utils.TestUtils;
+import edu.uci.ics.textdb.dataflow.utils.DataflowUtils;
 import edu.uci.ics.textdb.exp.dictionarymatcher.Dictionary;
 import edu.uci.ics.textdb.exp.dictionarymatcher.DictionaryPredicate;
 import edu.uci.ics.textdb.exp.keywordmatcher.KeywordMatchingType;
@@ -22,6 +23,8 @@ public class DictionaryMatcherTestHelper {
     
     public static final String PEOPLE_TABLE = "dictionary_test_people";
     public static final String CHINESE_TABLE = "dictionary_test_chinese";
+    
+    public static final String RESULTS = "dictionary test results";
     
     public static void writeTestTables() throws TextDBException {
         RelationManager relationManager = RelationManager.getRelationManager();
@@ -77,6 +80,10 @@ public class DictionaryMatcherTestHelper {
             if (TestUtils.equals(scanSourceResults, dictionarySourceResults)) {
                 return scanSourceResults;
             } else {
+                System.out.println("scan count: " + scanSourceResults.size());
+                System.out.println(DataflowUtils.getTupleListString(scanSourceResults));
+                System.out.println("dict count: " + dictionarySourceResults.size());
+                System.out.println(DataflowUtils.getTupleListString(dictionarySourceResults));
                 throw new DataFlowException("results from scanSource and dictionarySource are inconsistent");
             }
         }
@@ -119,7 +126,7 @@ public class DictionaryMatcherTestHelper {
         ScanBasedSourceOperator scanSource = new ScanBasedSourceOperator(new ScanSourcePredicate(tableName));
         
         DictionaryPredicate dictiaonryPredicate = new DictionaryPredicate(
-                dictionary, attributeNames, luceneAnalyzerStr, matchingType);
+                dictionary, attributeNames, luceneAnalyzerStr, matchingType, RESULTS);
         DictionaryMatcher dictionaryMatcher = new DictionaryMatcher(dictiaonryPredicate);
         
         dictionaryMatcher.setLimit(limit);
@@ -158,7 +165,7 @@ public class DictionaryMatcherTestHelper {
         String luceneAnalyzerStr = relationManager.getTableAnalyzerString(tableName);
         
         DictionarySourcePredicate dictiaonrySourcePredicate = new DictionarySourcePredicate(
-                dictionary, attributeNames, luceneAnalyzerStr, matchingType, tableName);
+                dictionary, attributeNames, luceneAnalyzerStr, matchingType, tableName, RESULTS);
         DictionaryMatcherSourceOperator dictionarySource = new DictionaryMatcherSourceOperator(
                 dictiaonrySourcePredicate);
 

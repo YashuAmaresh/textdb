@@ -374,5 +374,27 @@ public class RelationManagerTest {
         relationManager.deleteTable(tableName1);  
     }
     
+    /*
+     * Test that table name with upper case in it is handled properly.
+     */
+    @Test
+    public void test16() throws Exception {
+        String tableName1 = "Relation_Manager_Test_Table_15_1";
+        
+        String indexDirectory = "./index/test_table/relation_manager_test_table_16";
+        Schema schema = new Schema(new Attribute("content", AttributeType.TEXT));
+        String luceneAnalyzerString = "standard";
+        
+        relationManager.deleteTable(tableName1);
+        
+        relationManager.createTable(tableName1, indexDirectory, schema, luceneAnalyzerString);
+        
+        Assert.assertTrue(relationManager.checkTableExistence(tableName1));
+        
+        relationManager.deleteTable(tableName1);  
+        
+        Assert.assertTrue(! relationManager.checkTableExistence(tableName1));
+    }
+    
     
 }

@@ -51,8 +51,6 @@ public class KeywordMatcherSourceOperator extends AbstractSingleInputOperator im
             throws DataFlowException, StorageException {
         this.predicate = predicate;
         
-        this.limit = predicate.getLimit();
-        this.offset = predicate.getOffset();
         this.queryTokenList = DataflowUtils.tokenizeQuery(predicate.getLuceneAnalyzerString(), predicate.getQuery());
         this.queryTokenSet = new HashSet<>(this.queryTokenList);
         
@@ -69,10 +67,7 @@ public class KeywordMatcherSourceOperator extends AbstractSingleInputOperator im
         this.dataReader.setPayloadAdded(true);
         
         // generate KeywordMatcher
-        KeywordPredicate keywordPredicate = new KeywordPredicate(
-                predicate.getQuery(), predicate.getAttributeNames(), predicate.getLuceneAnalyzerString(), predicate.getMatchingType(),
-                null, null);
-        keywordMatcher = new KeywordMatcher(keywordPredicate);
+        keywordMatcher = new KeywordMatcher(predicate);
         keywordMatcher.setInputOperator(dataReader);
         
         this.inputOperator = this.keywordMatcher;

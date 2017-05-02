@@ -54,6 +54,7 @@ public class RelationManager {
      */
     public boolean checkTableExistence(String tableName) {
         try {
+            tableName = tableName.toLowerCase();
             return getTableCatalogTuple(tableName) != null;
         } catch (StorageException e) {
             // TODO: change it to textdb runtime exception
@@ -78,13 +79,12 @@ public class RelationManager {
      */
     public void createTable(String tableName, String indexDirectory, Schema schema, String luceneAnalyzerString)
             throws StorageException {
+        // convert the table name to lower case
+        tableName = tableName.toLowerCase();
         // table should not exist
         if (checkTableExistence(tableName)) {
             throw new StorageException(String.format("Table %s already exists.", tableName));
         }
-        
-        // convert the table name to lower case
-        tableName = tableName.toLowerCase();
         // convert the index directory to its absolute path
         try {
             indexDirectory = new File(indexDirectory).getCanonicalPath();
@@ -139,6 +139,7 @@ public class RelationManager {
      * @throws StorageException
      */
     public void deleteTable(String tableName) throws StorageException {
+        tableName = tableName.toLowerCase();
         // User can't delete catalog table
         if (isSystemCatalog(tableName)) {
             throw new StorageException("Deleting a system catalog table is prohibited.");

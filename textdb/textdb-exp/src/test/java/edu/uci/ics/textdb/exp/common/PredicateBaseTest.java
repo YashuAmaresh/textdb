@@ -28,6 +28,7 @@ import edu.uci.ics.textdb.exp.regexsplit.RegexSplitPredicate;
 import edu.uci.ics.textdb.exp.regexsplit.RegexSplitPredicate.SplitType;
 import edu.uci.ics.textdb.exp.sampler.SamplerPredicate;
 import edu.uci.ics.textdb.exp.sampler.SamplerPredicate.SampleType;
+import edu.uci.ics.textdb.exp.sink.tuple.TupleSinkPredicate;
 import edu.uci.ics.textdb.exp.source.file.FileSourcePredicate;
 import edu.uci.ics.textdb.exp.source.scan.ScanSourcePredicate;
 import junit.framework.Assert;
@@ -50,10 +51,10 @@ public class PredicateBaseTest {
         
         JsonNode predicateJsonNode = objectMapper.readValue(predicateJson, JsonNode.class);
         JsonNode resultPredicateJsonNode = objectMapper.readValue(resultPredicateJson, JsonNode.class);
-
+        
         Assert.assertEquals(predicateJsonNode, resultPredicateJsonNode);
-        Assert.assertTrue(predicateJson.contains("operatorType"));
-        Assert.assertTrue(predicateJson.contains("operatorID"));
+        Assert.assertTrue(predicateJson.contains(PropertyNameConstants.OPERATOR_TYPE));
+        Assert.assertTrue(predicateJson.contains(PropertyNameConstants.OPERATOR_ID));
     }
     
     private static List<String> attributeNames = Arrays.asList("attr1", "attr2");
@@ -64,7 +65,8 @@ public class PredicateBaseTest {
                 new Dictionary(Arrays.asList("entry1", "entry2")),
                 attributeNames,
                 "standard",
-                KeywordMatchingType.CONJUNCTION_INDEXBASED);
+                KeywordMatchingType.CONJUNCTION_INDEXBASED,
+                "dictResults");
         testPredicate(dictionaryPredicate);
         
         DictionarySourcePredicate dictionarySourcePredicate = new DictionarySourcePredicate(
@@ -72,7 +74,8 @@ public class PredicateBaseTest {
                 attributeNames,
                 "standard",
                 KeywordMatchingType.CONJUNCTION_INDEXBASED, 
-                "tableName");
+                "tableName",
+                "dictSourceResults");
         testPredicate(dictionarySourcePredicate);
     }
     
@@ -112,7 +115,8 @@ public class PredicateBaseTest {
                 "keyword",
                 attributeNames,
                 "standard",
-                KeywordMatchingType.CONJUNCTION_INDEXBASED);
+                KeywordMatchingType.CONJUNCTION_INDEXBASED,
+                "keywordResults");
         testPredicate(keywordPredicate);
         
         KeywordSourcePredicate keywordSourcePredicate = new KeywordSourcePredicate(
@@ -120,7 +124,8 @@ public class PredicateBaseTest {
                 attributeNames,
                 "standard",
                 KeywordMatchingType.CONJUNCTION_INDEXBASED,
-                "tableName");
+                "tableName",
+                "keywordSourceResults");
         testPredicate(keywordSourcePredicate);
     }
     
@@ -187,8 +192,14 @@ public class PredicateBaseTest {
     
     @Test
     public void testScanSource() throws Exception {
-        ScanSourcePredicate ScanSourcePredicate = new ScanSourcePredicate("tableName");
-        testPredicate(ScanSourcePredicate);
+        ScanSourcePredicate scanSourcePredicate = new ScanSourcePredicate("tableName");
+        testPredicate(scanSourcePredicate);
+    }
+    
+    @Test
+    public void testTupleSink() throws Exception {
+        TupleSinkPredicate tupleSinkPredicate = new TupleSinkPredicate();
+        testPredicate(tupleSinkPredicate);
     }
 
 }

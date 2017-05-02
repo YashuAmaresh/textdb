@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.uci.ics.textdb.api.constants.SchemaConstants;
+import edu.uci.ics.textdb.api.constants.ErrorMessages;
 import edu.uci.ics.textdb.api.dataflow.ISourceOperator;
 import edu.uci.ics.textdb.api.exception.DataFlowException;
 import edu.uci.ics.textdb.api.exception.TextDBException;
 import edu.uci.ics.textdb.api.field.ListField;
+import edu.uci.ics.textdb.api.schema.Attribute;
 import edu.uci.ics.textdb.api.schema.AttributeType;
 import edu.uci.ics.textdb.api.schema.Schema;
 import edu.uci.ics.textdb.api.span.Span;
@@ -80,9 +81,13 @@ public class DictionaryMatcherSourceOperator implements ISourceOperator {
                 // list.
                 inputSchema = indexSource.getOutputSchema();
                 outputSchema = inputSchema;
-                if (!inputSchema.containsField(SchemaConstants.SPAN_LIST)) {
-                    outputSchema = Utils.addAttributeToSchema(outputSchema, SchemaConstants.SPAN_LIST_ATTRIBUTE);
+                if (inputSchema.containsField(predicate.getSpanListName())) {
+                    throw new DataFlowException(ErrorMessages.DUPLICATE_ATTRIBUTE(
+                            predicate.getSpanListName(), inputSchema));
                 }
+                outputSchema = Utils.addAttributeToSchema(outputSchema, 
+                        new Attribute(predicate.getSpanListName(), AttributeType.LIST));
+
 
             } else {
                 // For other keyword matching types (conjunction and phrase),
@@ -93,7 +98,8 @@ public class DictionaryMatcherSourceOperator implements ISourceOperator {
                         predicate.getAttributeNames(),
                         predicate.getAnalyzerString(),
                         predicate.getKeywordMatchingType(),
-                        predicate.getTableName()));
+                        predicate.getTableName(),
+                        predicate.getSpanListName()));
                 keywordSource.open();
 
                 // Other keyword matching types uses a KeywordMatcher, so the
@@ -173,7 +179,8 @@ public class DictionaryMatcherSourceOperator implements ISourceOperator {
                 KeywordSourcePredicate keywordSourcePredicate = new KeywordSourcePredicate(currentDictionaryEntry,
                         predicate.getAttributeNames(),
                         predicate.getAnalyzerString(), keywordMatchingType,
-                        predicate.getTableName());
+                        predicate.getTableName(),
+                        predicate.getSpanListName());
 
                 keywordSource = new KeywordMatcherSourceOperator(keywordSourcePredicate);
                 keywordSource.open();
@@ -184,9 +191,8 @@ public class DictionaryMatcherSourceOperator implements ISourceOperator {
             Tuple sourceTuple;
             Tuple resultTuple = null;
             while ((sourceTuple = indexSource.getNextTuple()) != null) {
-                if (!inputSchema.containsField(SchemaConstants.SPAN_LIST)) {
-                    sourceTuple = DataflowUtils.getSpanTuple(sourceTuple.getFields(), new ArrayList<Span>(), outputSchema);
-                }
+                sourceTuple = DataflowUtils.getSpanTuple(sourceTuple.getFields(), new ArrayList<Span>(), outputSchema);
+
                 resultTuple = computeMatchingResult(currentDictionaryEntry, sourceTuple);
                 if (resultTuple != null) {
                     resultCursor++;
@@ -269,7 +275,7 @@ public class DictionaryMatcherSourceOperator implements ISourceOperator {
             return null;
         }
 
-        ListField<Span> spanListField = sourceTuple.getField(SchemaConstants.SPAN_LIST);
+        ListField<Span> spanListField = sourceTuple.getField(predicate.getSpanListName());
         List<Span> spanList = spanListField.getValue();
         spanList.addAll(matchingResults);
 

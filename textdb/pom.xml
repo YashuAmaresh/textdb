@@ -46,10 +46,10 @@
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                     <argLine>-enableassertions -Xmx2048m
-                        -Dfile.encoding=UTF-8
-                        -Djava.util.logging.config.file=${user.home}/logging.properties
-                        -Xdebug
-                        -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=n
+                         -Dfile.encoding=UTF-8
+                         -Djava.util.logging.config.file=${user.home}/logging.properties
+                         -Xdebug
+                         -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=n
                     </argLine>
                 </configuration>
             </plugin>
@@ -60,10 +60,10 @@
         <module>textdb-api</module>
         <module>textdb-storage</module>
         <module>textdb-dataflow</module>
+        <module>textdb-exp</module>
         <module>textdb-perftest</module>
         <module>textdb-sandbox</module>
         <module>textdb-textql</module>
         <module>textdb-web</module>
-        <module>textdb-exp</module>
     </modules>
 </project>

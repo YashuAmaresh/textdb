@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.uci.ics.textdb.api.constants.SchemaConstants;
 import edu.uci.ics.textdb.api.dataflow.IOperator;
 import edu.uci.ics.textdb.api.exception.DataFlowException;
 import edu.uci.ics.textdb.api.exception.StorageException;
@@ -120,7 +121,8 @@ public class JoinTestHelper {
             KeywordMatchingType matchingType) throws TextDBException {
         KeywordSourcePredicate keywordSourcePredicate = new KeywordSourcePredicate(query, 
                 Arrays.asList(JoinTestConstants.AUTHOR, JoinTestConstants.TITLE, JoinTestConstants.REVIEW),
-                RelationManager.getRelationManager().getTableAnalyzerString(tableName), matchingType, tableName);
+                RelationManager.getRelationManager().getTableAnalyzerString(tableName), 
+                matchingType, tableName, SchemaConstants.SPAN_LIST);
         KeywordMatcherSourceOperator keywordSource = new KeywordMatcherSourceOperator(keywordSourcePredicate);
         return keywordSource;
     }
